@@ -33,6 +33,10 @@ export class FilterViewProvider implements vscode.WebviewViewProvider {
           vscode.commands.executeCommand("patchwork.changeSearch", data.value);
           break;
         }
+        case "changeProvider": {
+          vscode.commands.executeCommand("patchwork.changeProvider");
+          break;
+        }
         case "changeProject": {
           vscode.commands.executeCommand("patchwork.changeProject");
           break;
@@ -94,6 +98,13 @@ export class FilterViewProvider implements vscode.WebviewViewProvider {
           Title contains:
           <span slot="start" class="codicon codicon-search"></span>
         </vscode-text-field>
+
+        <div id="provider-input-wrapper" class="clickable">
+          <vscode-text-field class="filter-input not-clickable" id="provider-input">
+            In provider:
+            <span slot="start" class="codicon codicon-organization"></span>
+          </vscode-text-field>
+        </div>
 
         <div id="project-input-wrapper" class="clickable">
           <vscode-text-field class="filter-input not-clickable" id="project-input">

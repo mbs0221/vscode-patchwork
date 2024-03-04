@@ -3,6 +3,7 @@ import { Patch, PatchSummary, Series } from "./Types";
 
 export interface Filter {
   query: string;
+  provider: string;
   project: string;
   submitter: string;
   before: string;

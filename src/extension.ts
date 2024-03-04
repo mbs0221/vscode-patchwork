@@ -8,12 +8,15 @@ import { gitAm } from "./utilities/gitAm";
 import * as vscode from "vscode";
 import { fetchAPIHTMLPage, getPersons, getProjects } from "./utilities/fetchAPIHTMLPage";
 import { SavedFiltersDataProvider } from "./tree-views/SavedFiltersDataProvider";
-import { onConfigurationUpdate } from "./utilities/config";
+import { getProviders, onConfigurationUpdate } from "./utilities/config";
 
 export async function activate(context: ExtensionContext) {
   // Retrieve the list of projects and persons from cache if available
+  let providersMap: Record<string, string> = context.workspaceState.get("patchwork:providers", {});
   let projectsMap: Record<string, string> = context.workspaceState.get("patchwork:projects", {});
   let personsMap: Record<string, string> = context.workspaceState.get("patchwork:persons", {});
+  providersMap = getProviders();
+  context.workspaceState.update("patchwork:providers", providersMap);
   // Asynchronously fetch an updated version
   fetchAPIHTMLPage(context).then((databaseDom: any) => {
     projectsMap = getProjects(databaseDom);
@@ -137,6 +140,27 @@ export async function activate(context: ExtensionContext) {
       let newFilter = { ...currentFilter };
       newFilter.query = q;
       changeFilter(newFilter);
+    })
+  );
+
+  context.subscriptions.push(
+    commands.registerCommand("patchwork.changeProvider", () => {
+      const providers = [{ label: "All providers", id: "" }];
+      for (const id in providersMap) {
+        providers.push({ label: providersMap[id], id: id });
+      }
+
+      vscode.window
+        .showQuickPick(providers, {
+          placeHolder: "Type a provider name. E.g: Linaro",
+        })
+        .then((provider: { label: string; id: string } | undefined) => {
+          if (provider) {
+            let newFilter = { ...currentFilter };
+            newFilter.provider = provider.id;
+            changeFilter(newFilter);
+          }
+        });
     })
   );
 

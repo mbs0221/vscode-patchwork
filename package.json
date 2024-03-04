@@ -122,6 +122,27 @@
           "type": "string",
           "default": "https://patchwork.kernel.org",
           "description": "The full base URL (protocol included) for your desired Patchwork instance."
+        },
+        "patchwork.providers": {
+          "type": "array",
+          "default": [
+            {
+              "name": "kernel",
+              "baseUrl": "https://patchwork.kernel.org"
+            },
+            {
+              "name": "ozlabs",
+              "baseUrl": "https://patchwork.ozlabs.org"
+            },
+            {
+              "name": "linaro",
+              "baseUrl": "https://patches.linaro.org/api"
+            },
+            {
+              "name": "yoctoproject",
+              "baseUrl": "http://patchwork.yoctoproject.org"
+            }
+          ]
         }
       }
     }
